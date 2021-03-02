@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars_files:
+  - ec2_vars.yml
+ 
+  tasks:
+  - name: Create Hosts file
+    file:
+      path: "{{ ec2_hostfile }}"
+      state: touch
+
+  - name: hosts file Header
+    lineinfile:
+      path: "{{ ec2_hostfile }}"
+      line: '[ec2]'
+
+  - name: Loop VM Creation
+    include_tasks: ec2_loop.yml
+    with_dict: "{{ vms }}"

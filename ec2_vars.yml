@@ -1,0 +1,20 @@
+---
+ec2_access_key: ** Your ec2 access Key **
+ec2_secret_key: ** Your ec2 secret **
+ec2_region: us-east-1
+ec2_key_name: ** Your shared SSH Key Name ** 
+ec2_security_group_id: ** Your security Group ID ** 
+ec2_vpc_subnet_id: ** Your VPC Subnet ID ID ** 
+ec2_hostfile: ec2_hosts
+
+vms:
+  eins:
+    type: t2.large
+    image: ami-0b416942dd362c53f # Fedora AMI
+    disksize: 40
+    purpose: database
+  zwei:
+    type: t2.large
+    image: ami-0b416942dd362c53f # Fedora AMI
+    disksize: 40
+    purpose: webserver

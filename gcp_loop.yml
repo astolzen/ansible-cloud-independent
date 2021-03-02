@@ -1,0 +1,41 @@
+- name: create a disk
+  gcp_compute_disk:
+    name: "{{ item.key }}-disk"
+    size_gb: "{{ item.value.disksize }}"
+    source_image: "{{ item.value.image }}"
+    zone: "{{ gcp_zone }}"
+    project: "{{ gcp_project_id }}"
+    auth_kind: serviceaccount
+    service_account_file: "{{ gcp_credentials_file }}"
+    state: present
+  register: disk
+
+- name: create a instance
+  gcp_compute_instance:
+    name: "{{ item.key }}"
+    machine_type: "{{ item.value.type }}"
+    disks:
+    - auto_delete: 'true'
+      boot: 'true'
+      source: "{{ disk }}"
+    network_interfaces:
+    - access_configs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT  
+    zone: "{{ gcp_zone }}"
+    project: "{{ gcp_project_id }}"
+    auth_kind: serviceaccount
+    service_account_file: "{{ gcp_credentials_file }}"
+    state: present
+  register: gcp_return
+
+- name: debug output
+  debug:
+    msg: "{{ gcp_return }}"
+    verbosity: 2
+
+- name: Add Instance Data to Host File
+  lineinfile:
+    path: gcp_hosts
+    line: '{{ gcp_return.networkInterfaces[0].accessConfigs[0].natIP }} vmname={{ item.key }} privateip={{ gcp_return.networkInterfaces[0].networkIP }} purpose={{ item.value.purpose }}'
+    

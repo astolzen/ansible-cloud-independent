@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars_files:
+  - gcp_vars.yml
+
+  tasks:
+  - name: Create Hosts file
+    file:
+      path: "{{ gcp_hostfile }}"
+      state: touch
+  
+  - name: hosts file Header
+    lineinfile:
+      path: "{{ gcp_hostfile }}"
+      line: '[gcp]'
+  
+  - name: Create GCE VMs
+    include_tasks: gcp_loop.yml
+    with_dict: "{{ vms }}"

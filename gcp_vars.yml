@@ -1,0 +1,18 @@
+---
+gcp_credentials_file: ** Your GCP Credentials File .json **
+gcp_project_id: ** Your Project ID  **
+gcp_zone: us-central1-a
+gcp_hostfile: gcp_hosts
+
+vms:
+  eins:
+    type: n1-standard-2
+    image: projects/centos-cloud/global/images/family/centos-8 #CentOS 8 Template
+    disksize: 40
+    purpose: database
+  zwei:
+    type: n1-standard-2
+    image: projects/centos-cloud/global/images/family/centos-8  #CentOS 8 Template
+    disksize: 40
+    purpose: webserver
+
